@@ -1,0 +1,181 @@
+#:kivy 2.3.0
+#:set primarycolor "#97BD70"
+#:set textcolor "#735C45"
+#:set secondarycolor "#C2BBA2"
+#:set optionalcolor "#D6D8C2"
+
+<MyTopBar@MDTopAppBar>:
+    md_bg_color: primarycolor
+    elevation: 1
+
+<Button1@MDFillRoundFlatButton>:
+    font_name: 'fonts/karlaextrabold.ttf'
+    font_size: '20sp'
+    text_color: textcolor
+    md_bg_color: primarycolor
+    _min_width: 250
+    _min_height: 50
+    pos_hint: {"center_x": .5}
+
+<Button2>:
+    font_name: 'fonts/karlabold.ttf'
+    font_size: '18sp'
+    text_color: textcolor
+    md_bg_color: optionalcolor
+    _min_width: 60
+    _min_height: 60
+    pos_hint: {"center_x": .5}
+
+<Button3>:
+    md_bg_color: primarycolor
+    text_color: optionalcolor
+
+    
+<Title1@MDLabel>:
+    font_name: 'fonts/karlaextrabold.ttf'
+    font_size: '24sp'
+    color: textcolor
+    halign: "center"
+
+<Title2@Title1>:
+    color: primarycolor
+    font_size: '28sp'
+
+<Text1@MDLabel>:
+    font_name: 'fonts/karlabold.ttf'
+    font_size: '14sp'
+    color: textcolor
+    halign: "center"
+
+<Text2@Text1>:
+    font_size: '20sp'
+
+<Dicas>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        spacing: '16dp'
+        padding: ['36dp', '48dp']
+        MDBoxLayout:
+            size_hint: 1, .4
+            Image:
+                source: "images/logo.png"
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, .3
+            spacing: '20dp'
+            Title1:
+                id: dicadodia
+                text: "Dica para uma vida mais sustentável:"
+            Text2:
+                text: app.dica
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: '16dp'
+            size_hint: 1, .3
+            Button1:
+                text: 'Meus desafios'
+                on_press: app.gotoprogresso()
+            Button1:
+                text: "Compartilhar dica"
+                on_press: app.compartilhar('', dicadodia.text, app.dica)
+
+<DesafiosProgresso>:
+    id:progresso
+    MDBoxLayout:
+        orientation: 'vertical'
+        MyTopBar:
+            title: "Desafios"
+            left_action_items: [["arrow-left", lambda x: app.gotodicas()]]
+        MDBoxLayout:
+            padding: '42dp', '6dp'
+            MDScrollView:
+                bar_width: 0
+                do_scroll_x: False
+                MDGridLayout:
+                    cols: 4
+                    spacing: '12dp'
+                    id: desafios
+                    size_hint_y: None
+                    height: self.minimum_height
+
+<DesafioExplicacao>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        MyTopBar:
+            title: "Desafio"
+            left_action_items: [["arrow-left", lambda x: app.gotoprogresso()]]
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: '36dp', '24dp', '36dp', '48sp'
+            MDBoxLayout:
+                size_hint: 1, .2
+                spacing: '16dp'
+                Image:
+                    size: 70, 70
+                    source: "images/logo.png"
+                Title1:
+                    id: desafiotitle
+                    text: "Desafio " + str(app.n+1)
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, .5
+                padding_top: '48dp'
+                Title2:
+                    text: app.titulo
+                Text2:
+                    text: app.descricao
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: '16dp'
+                size_hint: 1, .3
+                Button1:
+                    text: 'Desafio concluído'
+                    on_press: app.concluir()
+                Button1:
+                    text: "Compartilhar desafio"
+                    on_press: app.compartilhar(desafiotitle.text, app.titulo, app.descricao)
+
+
+
+
+<DesafioConcluido>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        MyTopBar:
+            title: "Desafio concluído"
+            left_action_items: [["arrow-left", lambda x: app.gotoprogresso()]]
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: '36dp', '48dp'
+            MDBoxLayout:
+                size_hint: 1, .15
+                spacing: '16dp'
+                Image:
+                    size_hint: .40, 1
+                    size: 70, 70
+                    source: "images/logo.png"
+                Title1:
+                    text: "Desafio " + str(app.n+1) + "\n \n CONCLUÍDO"
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, .7
+                padding: 0, '32dp', 0, 0
+                Title1:
+                    size_hint: 1, .1
+                    color: primarycolor
+                    text: "PARABÉNS!"
+                Text2:
+                    id: desafiocompleto
+                    size_hint: 1, .2
+                    text: "Você completou o desafio " + str(app.n+1) + ":"
+                Text2:
+                    size_hint: 1, .6
+                    text: app.descricao + " \n \n Continue ajudando a tornar o mundo um lugar melhor!"
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: '16dp'
+                size_hint: 1, .15
+                Button1:
+                    text: "Compartilhar"
+                    on_press: app.compartilhar("PARABÉNS!", desafiocompleto.text, app.descricao)
+                        
