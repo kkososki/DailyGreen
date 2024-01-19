@@ -26,10 +26,10 @@ class Dicas(MDScreen):
 
 class DesafiosProgresso(MDScreen):
     def on_pre_enter(self):
-        store_desafios = JsonStore('desafios.json')
+        store_desafios = App.get_running_app().open_json('desafios.json')
         l = len(store_desafios['desafios'])
-        with open('concluidos.json', 'r') as f:
-            concluidos = json.load(f)
+        concluidos = App.get_running_app().open_json('concluidos.json')
+        self.ids.desafios.clear_widgets()
         for i in range(0, l):
             if i in concluidos:
                 button = Button3(id=str(i),text=str(i+1))
@@ -65,7 +65,7 @@ class Dailygreen(MDApp):
         return sm
     
     def on_start(self):
-        store_dicas = JsonStore('dicas.json')
+        store_dicas = App.get_running_app().open_json('dicas.json')
         l = len(store_dicas['dicas'])
         rn = randint(0,l)
         valor_dicas = store_dicas['dicas'][rn]
@@ -74,7 +74,7 @@ class Dailygreen(MDApp):
     def concluido(self, instance):
         self.root.current = 'concluido'
         App.get_running_app().n = int(instance.text)-1
-        store_desafios = JsonStore('desafios.json')
+        store_desafios = App.get_running_app().open_json('desafios.json')
         valor_desafios = store_desafios['desafios'][App.get_running_app().n]
         App.get_running_app().titulo = valor_desafios['titulo']
         App.get_running_app().descricao = valor_desafios['descricao']
@@ -82,7 +82,7 @@ class Dailygreen(MDApp):
     def desafio(self, instance):
         self.root.current = 'explicacao'
         App.get_running_app().n = int(instance.text)-1
-        store_desafios = JsonStore('desafios.json')
+        store_desafios = App.get_running_app().open_json('desafios.json')
         valor_desafios = store_desafios['desafios'][App.get_running_app().n]
         App.get_running_app().titulo = valor_desafios['titulo']
         App.get_running_app().descricao = valor_desafios['descricao']
@@ -116,13 +116,16 @@ class Dailygreen(MDApp):
 
     def concluir(self):
         App.get_running_app().gotoconcluido()
-        with open('concluidos.json', 'r') as f:
-            concluidos = json.load(f)
+        concluidos = App.get_running_app().open_json('concluidos.json')
         if App.get_running_app().n not in concluidos:
             concluidos.append(App.get_running_app().n)
         concluidos.sort()
-        with open('concluidos.json', 'w') as f:
+        with open('concluidos.json', 'w', encoding="utf8") as f:
             json.dump(concluidos, f)
+
+    def open_json(self, json_filename):
+        with open(json_filename, 'r', encoding="utf8") as f:
+            return json.load(f)
 
     def gotoprogresso(self):
         self.root.current = 'progresso'
